@@ -1,24 +1,21 @@
 import './App.css';
+import {useState}from "react";
 
 function App() {
 
-  let i = 0;
-
+  const [count, setCount] = useState(0);
+  
   const plus = () => {
-    i++;
-    document.getElementById("test").innerHTML = i;
-    console.log(i);
+        setCount(count+1);
   }
   const minus = () =>{
-    i--;
-    document.getElementById("test").innerHTML = i;
-    console.log(i);
+        setCount(count-1);
   }
 
   return (
     <>
 
-      <div id='test'>0</div>
+      <div>{count}</div>
       <button onClick={minus}>{"Minus"}</button>
       <button onClick={plus}>{"Plus"}</button>
     </>
