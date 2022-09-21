@@ -1,0 +1,95 @@
+//import logo from './logo.svg';
+import './App.css';
+import {useState}from "react";
+
+
+const faculties = [
+  {
+    name: "ENG",
+  },
+  {
+    name:"LNG",
+  },
+  {
+    name:"MED"
+  }
+]
+
+function App() {
+
+  const[firstName, setFirstName] = useState("");
+  const[lastName, setLastName] = useState("");
+  const[isChecked, setChecked] = useState(false,false,false);
+  const[password, setPassword] = useState("");
+  const[warning, setWarning] = useState("");
+  
+  const handleFirstNameChange = (event)=>{
+    setFirstName(event.target.value);
+  }
+  const handleLastNameChange = (event)=>{
+    setLastName(event.target.value);
+  }
+  const handlePasswordChange = (event)=>{
+    setPassword(event.target.value);
+  }
+  const handlePasswordDublicateCheck = (event)=>{
+    if(password != (event.target.value)){
+      setWarning("password do not match!");
+    }
+    else{
+      setWarning("");
+    }
+  }
+
+
+  const handleFacultyChange = (index) =>{
+    const newChecked = isChecked.map((ch, idx)=>{
+      if(index === idx) return !ch;
+      else return ch;
+    })
+    setChecked(newChecked);
+  }
+
+  const handleSubmit = (event) =>{
+    event.preventDefault();
+
+    setTimeout(() => {
+      console.log({firstName:firstName,lastName:lastName,faculties:isChecked});
+    }, 5000)
+  }
+
+  return (
+    <div>
+      <form>
+        <input type={"text"} placeholder={"Enter your name"} onChange={handleFirstNameChange}/>
+        {firstName}
+        <input type={"text"} placeholder={"Enter your surname"} onChange={handleLastNameChange}/>
+        {lastName}
+
+        <input type={"password"} placeholder={"Enter your password"} onChange={handlePasswordChange}/>{/* samim sdelat' */}
+        <input type={"password"} placeholder={"Dublicate your password"} onChange={handlePasswordDublicateCheck}/>{/* samim sdelat' */}
+
+        <p>
+          {warning}
+        </p>
+        
+        <p>Faculty</p>
+
+        {faculties.map((faculty)=>(
+          <div key={faculty.name}>
+            <span>{faculty.name}</span>
+            <input 
+            type={"checkbox"}
+            checked={isChecked[index]}
+            onChange={()=>handleFacultyChange(index)}/>
+          </div>
+        ))}
+
+        <button type='submit' onChange={handleSubmit}>Submit form</button>
+
+      </form>
+    </div>
+  );
+}
+
+export default App;
