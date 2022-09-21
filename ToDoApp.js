@@ -113,7 +113,7 @@ function App() {
           <li key={itemList.key} className="list-group-item" onClick={()=>handleItemDone(itemList.key)}>
           <span className={`todo-list-item ${itemList.isDone?"done" : ""}`}>
             <span className="todo-list-item-label">{itemList.label}</span>
-               {/* доделать */}
+               
             <button
               type="button"
               className="btn btn-outline-success btn-sm float-right"
@@ -127,7 +127,7 @@ function App() {
             >
               <i className="fa fa-trash-o" />
             </button>
-            {/* до сюда */}
+            
           </span>
         </li>
         ))}
