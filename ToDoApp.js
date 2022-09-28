@@ -51,7 +51,7 @@ function App() {
   }
 
   const handleItemDone = (key) => {
-    //razlichiya
+    // razlichiya
     setItems(
       (prevItems)=>
       prevItems.map((item)=>{
@@ -65,12 +65,31 @@ function App() {
     setStatus(myNewStatus);
   }
 
+  const handleImportant = (key) =>{
+    setItems(
+      (prevItems)=>
+      prevItems.map((item)=>{
+        if(item.key === key){
+          return{...item, isImportant: !item.isImportant};
+        }else return item;
+      }));
+  }
+
+  const handleDeleteItem = (key) =>{
+    setItems(
+      items.filter((item) => {
+        return item.key !== key
+      })   
+    );
+  }
+
+
   const itemsDone = items.filter((item) => item.isDone);
   const itemsNotDone = items.filter((item) => !item.isDone);
 
   const filteredItems = 
     status === "done" ? itemsDone : status === "active" ? itemsNotDone : items;
-///////filter((item) => item.isDone)
+
 
   return (
     <div className="todo-app">
@@ -110,13 +129,15 @@ function App() {
       <ul className="list-group todo-list">
 
         {filteredItems.map((itemList) => (
-          <li key={itemList.key} className="list-group-item" onClick={()=>handleItemDone(itemList.key)}>
-          <span className={`todo-list-item ${itemList.isDone?"done" : ""}`}>
-            <span className="todo-list-item-label">{itemList.label}</span>
-               
+          <li key={itemList.key} className="list-group-item" >
+          <span className={`todo-list-item ${itemList.isDone?"done" : ""} ${itemList.isImportant?"important" : ""}`}>
+            <span className="todo-list-item-label" onClick={()=>handleItemDone(itemList.key)}>
+                {itemList.label}
+            </span>
             <button
               type="button"
               className="btn btn-outline-success btn-sm float-right"
+              onClick={()=>handleImportant(itemList.key)}
             >
               <i className="fa fa-exclamation" />
             </button>
@@ -124,10 +145,10 @@ function App() {
             <button
               type="button"
               className="btn btn-outline-danger btn-sm float-right"
+              onClick={()=>handleDeleteItem(itemList.key)}
             >
               <i className="fa fa-trash-o" />
             </button>
-            
           </span>
         </li>
         ))}
