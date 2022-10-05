@@ -1,5 +1,5 @@
 import "./App.css";
-import {useState}from "react";
+import {useState, useMemo}from "react";
 import {v4 as uuid} from "uuid";
 
 // button-group
@@ -37,21 +37,29 @@ function App() {
   const [todoItemText, setTodoItemText] = useState("");
   const [items, setItems] = useState(itemsData);
   const [status, setStatus] = useState("all");
-
+  const [todoSearchItemText, setSearchItemText] = useState("");
+  // const [itemsSaveList, setItemsSaveList] = useState(items);
 
   const handleInputChange = (event) => {
     setTodoItemText(event.target.value);
   }
+
+  const searchItems = useMemo(()=> 
+    items.filter((str) =>
+      str.label.toLowerCase().includes(todoSearchItemText.toLowerCase())
+    ),
+    [items, todoSearchItemText]
+  )
 
   const handleAddItem = () => {
     const newObject = {key: uuid(), label: todoItemText};
     
     const newItems = [...items,newObject];
     setItems(newItems);
+    setTodoItemText("");
   }
 
   const handleItemDone = (key) => {
-    // razlichiya
     setItems(
       (prevItems)=>
       prevItems.map((item)=>{
@@ -76,21 +84,20 @@ function App() {
   }
 
   const handleDeleteItem = (key) =>{
-    setItems(
-      items.filter((item) => {
-        return item.key !== key
-      })   
-    );
+      setItems(
+        items.filter((item) => {
+          // handleDeleteItemSave(item.key);
+          return item.key !== key
+        })   
+      );
   }
-
 
   const itemsDone = items.filter((item) => item.isDone);
   const itemsNotDone = items.filter((item) => !item.isDone);
 
-  const filteredItems = 
-    status === "done" ? itemsDone : status === "active" ? itemsNotDone : items;
-
-
+  const filteredItems =
+     status === "done" ? itemsDone : status === "active" ? itemsNotDone : searchItems ;
+  
   return (
     <div className="todo-app">
       {/* App-header */}
@@ -104,9 +111,11 @@ function App() {
       <div className="top-panel d-flex">
         {/* Search-panel */}
         <input
+          value={todoSearchItemText}
           type="text"
           className="form-control search-input"
           placeholder="type to search"
+          onChange={(event) => setSearchItemText(event.target.value)}
         />
         {/* Item-status-filter */}
         <div className="btn-group">
@@ -127,10 +136,9 @@ function App() {
 
       {/* List-group */}
       <ul className="list-group todo-list">
-
         {filteredItems.map((itemList) => (
-          <li key={itemList.key} className="list-group-item" >
-          <span className={`todo-list-item ${itemList.isDone?"done" : ""} ${itemList.isImportant?"important" : ""}`}>
+          <li key={itemList.key} className={`list-group-item`} >      
+           <span className={`todo-list-item ${itemList.isDone?"done" : ""} ${itemList.isImportant?"important" : ""}`}>
             <span className="todo-list-item-label" onClick={()=>handleItemDone(itemList.key)}>
                 {itemList.label}
             </span>
