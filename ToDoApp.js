@@ -1,5 +1,5 @@
 import "./App.css";
-import {useState, useMemo}from "react";
+import {useState, useMemo, useEffect}from "react";
 import {v4 as uuid} from "uuid";
 
 // button-group
@@ -34,11 +34,16 @@ const itemsData = [
 ];
 
 function App() {
+  const storageItems = JSON.parse(localStorage.getItem("items")) || itemsData;
   const [todoItemText, setTodoItemText] = useState("");
-  const [items, setItems] = useState(itemsData);
+  const [items, setItems] = useState(storageItems);
   const [status, setStatus] = useState("all");
   const [todoSearchItemText, setSearchItemText] = useState("");
-  // const [itemsSaveList, setItemsSaveList] = useState(items);
+
+  useEffect(()=>{
+    const jsonItems = JSON.stringify(items);
+    localStorage.setItem("items", jsonItems);
+  },[items])
 
   const handleInputChange = (event) => {
     setTodoItemText(event.target.value);
@@ -86,7 +91,6 @@ function App() {
   const handleDeleteItem = (key) =>{
       setItems(
         items.filter((item) => {
-          // handleDeleteItemSave(item.key);
           return item.key !== key
         })   
       );
@@ -98,6 +102,7 @@ function App() {
   const filteredItems =
      status === "done" ? itemsDone : status === "active" ? itemsNotDone : searchItems ;
   
+
   return (
     <div className="todo-app">
       {/* App-header */}
